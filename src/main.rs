@@ -27,8 +27,26 @@ impl Invaders {
         }
     }
 
+    fn next(&mut self) -> u32 {
+        let opcode = self.mem.borrow().get(self.cpu.reg.pc);
+        // get the opcode here to determine if the arcade machine should handle it
+        // else, we let the cpu deal with it.
+        match opcode {
+            // TODO
+            _ => ()
+        }
+        self.cpu.step();
+
+        1 // TODO: SOMETHING THAT WORKS
+    }
+
     fn step(&mut self) {
-        println!("stepping")
+        let mut cycle = 0;
+        cycle += self.next();
+        // check if we should be dealing with interrupts
+        // draw stuff on screen
+        // handle keypresses
+        
     }
 }
 

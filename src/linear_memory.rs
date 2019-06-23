@@ -6,11 +6,11 @@
   }
 
   impl LinearMemory {
-    fn get(&self, a: u16) -> u8 {
+    pub fn get(&self, a: u16) -> u8 {
       self.data[usize::from(a)]
     }
 
-    fn set(&mut self, a: u16, v: u8) {
+    pub fn set(&mut self, a: u16, v: u8) {
       self.data[usize::from(a)] = v
     }
 
