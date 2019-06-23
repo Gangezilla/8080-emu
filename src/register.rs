@@ -24,7 +24,8 @@ impl Register {
   // lots of get and set above register functions...
 
   pub fn get_flag(&self, f: Flag) -> bool {
-    // 
+    //
+    false
   }
 
   pub fn set_flag(&mut self, f: Flag, v: bool) {
@@ -34,6 +35,6 @@ impl Register {
   pub fn boot() -> Self {
     let mut reg = Self::default();
     // reg.f = 0b0000_0010; // why?
-    r
+    reg
   }
 }

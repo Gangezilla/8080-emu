@@ -5,11 +5,11 @@ use std::fs::File;
 use std::io::Read;
 
 mod linear_memory;
+mod register;
 mod cpu;
 
-
 struct Invaders {
-    cpu: cpu::Cpu
+    cpu: cpu::Cpu,
     mem: Rc<RefCell<linear_memory::LinearMemory>>
 }
 
@@ -28,13 +28,13 @@ impl Invaders {
     }
 
     fn step(&mut self) {
-
+        println!("stepping")
     }
 }
 
 fn main() {
     // init CPU with invaders rom
-    let game = Invaders::boot("./static/invaders");
+    let mut game = Invaders::boot("./static/invaders");
     loop {
         // run if game is running.
         game.step();

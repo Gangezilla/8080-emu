@@ -1,18 +1,18 @@
 use std::rc::Rc; // RC - single threaded reference counted pointer
 use std::cell::RefCell; // a mutable memory location
 
-use linear_memory;
-mod register;
+use crate::linear_memory::LinearMemory;
+use crate::register::Register;
 
 pub struct Cpu {
   pub reg: Register,
-  pub mem: Rc<RefCell<linear_memory::LinearMemory>>,
+  pub mem: Rc<RefCell<LinearMemory>>,
 }
 
 impl Cpu {
-  pub fn boot(mem: Rc<RefCell<linear_memory::LinearMemory>>) -> Self {
+  pub fn boot(mem: Rc<RefCell<LinearMemory>>) -> Self {
     Self {
-      reg: register::Register::boot(),
+      reg: Register::boot(),
       mem,
     }
   }
