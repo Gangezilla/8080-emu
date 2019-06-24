@@ -1,5 +1,6 @@
 use std::cell::RefCell;
-use std::rc::Rc; // RC - single threaded reference counted pointer // a mutable memory location
+use std::rc::Rc; 
+// RC - single threaded reference counted pointer // a mutable memory location
 
 use crate::linear_memory::LinearMemory;
 use crate::register::Register;
@@ -22,27 +23,35 @@ impl Cpu {
     }
   }
 
-  fn get_current_opcode(&mut self) -> u8 {
-    let byte = self.mem.borrow().get(self.reg.pc);
+  fn get_current_instruction(&mut self) -> u8 {
+    let instruction = self.mem.borrow().get(self.reg.pc);
     self.reg.pc += 1;
-    byte
+    instruction
+  }
+
+  // Integrated Management Module
+  // i think its just a generic term for the components of the processor?
+  fn imm_dw(&mut self) -> u16 {
+    let v = self.mem.borrow_mut().get_word(self.reg.pc);
+    self.reg.pc += 2;
+    v
   }
 
   pub fn next(&mut self) -> u32 {
-    let opcode = self.get_current_opcode();
-    println!("{} PC={:04x} SP={:04x} A={:02x} F={:02x} B={:02x} C={:02x} D={:02x} E={:02x} H={:02x} L={:02x}",
-      asm::convert_opcode(opcode),
-      self.reg.pc,
-      self.reg.sp,
-      self.reg.a,
-      self.reg.f,
-      self.reg.b,
-      self.reg.c,
-      self.reg.d,
-      self.reg.e,
-      self.reg.h,
-      self.reg.l,
-    );
+    let opcode = self.get_current_instruction();
+    // println!("{} PC={:04x} SP={:04x} A={:02x} F={:02x} B={:02x} C={:02x} D={:02x} E={:02x} H={:02x} L={:02x}",
+    //   asm::convert_opcode(opcode),
+    //   self.reg.pc,
+    //   self.reg.sp,
+    //   self.reg.a,
+    //   self.reg.f,
+    //   self.reg.b,
+    //   self.reg.c,
+    //   self.reg.d,
+    //   self.reg.e,
+    //   self.reg.h,
+    //   self.reg.l,
+    // );
 
     match opcode {
       // ACI Add Immediate to Accumulator with Carry
@@ -52,15 +61,15 @@ impl Cpu {
       // ANA Logical And Register or Memory with Accumulator
       // ANI Logical And Immediate with Acumulator
       // CALL Subroutines Instructions
-        // CALL CALL Unconditional
-        // CC Call On Carry
-        // CM Call On Minus
-        // CNC Call On No Carry
-        // CNZ Call On No Zero
-        // CP Call On Positive
-        // CPE Call On Parity Even
-        // CPO Call On Parity Odd
-        // CZ Call On Zero
+      // CALL CALL Unconditional
+      // CC Call On Carry
+      // CM Call On Minus
+      // CNC Call On No Carry
+      // CNZ Call On No Zero
+      // CP Call On Positive
+      // CPE Call On Parity Even
+      // CPO Call On Parity Odd
+      // CZ Call On Zero
       // CMA Compliment Accumulator
       // CMC Compliment Carry
       // CMP Compare Memory or Register With Accumulator
@@ -72,17 +81,20 @@ impl Cpu {
       // EI Enable Interrupt
       // HLT HALT
       // INPUT/OUTPUT Instructions
-        // INR Increment Register or Memory
+      // INR Increment Register or Memory
       // JUMP INSTRUCTIONS
-        // JC Jump If Carry
-        // JM Jump If Minus
-        // JMP Jump Unconditional
-        // JNC Jump If No Carry
-        // JNZ Jump If No Zero
-        // JP Jump If Positive
-        // JPE Jump on Parity Even
-        // JPO Jump on Parity Odd
-        // JZ Jump on Zero
+      0xC3 => {
+        let a = self.imm_dw();
+      }
+      // JC Jump If Carry
+      // JM Jump If Minus
+      // JMP Jump Unconditional
+      // JNC Jump If No Carry
+      // JNZ Jump If No Zero
+      // JP Jump If Positive
+      // JPE Jump on Parity Even
+      // JPO Jump on Parity Odd
+      // JZ Jump on Zero
       // LDA Load Accumulator Direct
       // LDAX Load Accumulator
       // LHLD Load HAnd L Direct
@@ -90,6 +102,7 @@ impl Cpu {
       // MVI Move Immediate Register or Memory
       // MOV Instruction
       // NOP No Operation
+      0x00 => {},
       // ORA Logical Or Register or Memory With Accumulator
       // ORI Logical Or Immediate with Accumulator
       // OUT Output
@@ -99,19 +112,19 @@ impl Cpu {
       // RAL Rotate Accumulator Left Through Carry
       // RAR Rotate Accumulator Right Through Carry
       // RETURN FROM SUBROUTINE INSTRUCTIONS
-        // RC Return If Carry
-        // RET Return Unconditional
-        // RM Return On Minus
-        // RNC Return If No Carry
-        // RNZ Return If No Zero
-        // RP Return If Positive
-        // RPE Return If Parity Even
-        // RPO Return If Parity Odd
-        // RZ Return If Zero
+      // RC Return If Carry
+      // RET Return Unconditional
+      // RM Return On Minus
+      // RNC Return If No Carry
+      // RNZ Return If No Zero
+      // RP Return If Positive
+      // RPE Return If Parity Even
+      // RPO Return If Parity Odd
+      // RZ Return If Zero
       // RLC Rotate Accumulator Left
       // RRC Rotate Accumulator Right
       // RST Restart
-      // SBB Subtract Memory or Register from Accumulator 
+      // SBB Subtract Memory or Register from Accumulator
       // SBI Subtract Immediate from Accumulator With Borrow
       // SHLD Store H and L Direct
       // SPHL Load SP From H and L
@@ -124,10 +137,24 @@ impl Cpu {
       // XRA Logical Exclusive-Or Register or Memory With Accumulator
       // XRI Logical Exclusive-Or Immediate With Accumulator
       // XTHL Exchange Stack
-
+      _ => {
+        println!("{} PC={:04x} SP={:04x} A={:02x} F={:02x} B={:02x} C={:02x} D={:02x} E={:02x} H={:02x} L={:02x}",
+          asm::convert_opcode(opcode),
+          self.reg.pc,
+          self.reg.sp,
+          self.reg.a,
+          self.reg.f,
+          self.reg.b,
+          self.reg.c,
+          self.reg.d,
+          self.reg.e,
+          self.reg.h,
+          self.reg.l,
+        );
+        panic!();
+      }
     }
     1 // TODO return something for real.
-
 
   }
 

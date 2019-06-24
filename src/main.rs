@@ -7,6 +7,7 @@ use std::io::Read;
 mod linear_memory;
 mod register;
 mod cpu;
+mod asm;
 
 struct Invaders {
     cpu: cpu::Cpu,

@@ -54,7 +54,7 @@ pub fn convert_opcode(opcode: u8) -> &'static str {
         // Decrement D
         0x16 => "0x16: MVI D",
         // Move byte 2 into D
-        0x17 => "0xUNIMPLEMENTED!!!",
+        0x17 => "UNIMPLEMENTED!!!",
         0x18 => "0x18: -",
         0x19 => "0x19: DAD D",
         // Add D & E to H & L
@@ -144,7 +144,7 @@ pub fn convert_opcode(opcode: u8) -> &'static str {
         0x3A => "0x3a: LDA adr",
         // Load Accumulator Direct
         // The content of the memory location, whose address is specified in byte 2 and byte 3 of the instruction, is moved to register A.
-        0x3B => "0xUNIMPLEMENTED!!!",
+        0x3B => "UNIMPLEMENTED!!!",
         0x3C => "0x3c: INR A",
         // Increment Register A
         0x3D => "0x3d: DCR A",
@@ -479,6 +479,6 @@ pub fn convert_opcode(opcode: u8) -> &'static str {
         // The Z flag is set to 1 if (A) = (byte 2). The CY flag is set to 1 if (A) <(byte 2).
         0xFF => "0xff: RST 7",
         // CALL $38
-        _ => "0xUnimplemented instruction",
+        _ => "Unimplemented instruction",
     }
 }
